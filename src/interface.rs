@@ -3,8 +3,11 @@
 
 use crate::misc::*;
 use crate::math::*;
-use crate::main::BUILD_NUMBER;
+
 use std::io::{stdout, stdin, Write};
+
+// builds count
+include!(concat!(env!("OUT_DIR"), "/build_num.rs"));
 
 pub fn calculator() {
     // does not include the screenclear(), you have to do it yourself
