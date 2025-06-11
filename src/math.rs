@@ -1,5 +1,3 @@
-use std::time::{SystemTime, UNIX_EPOCH};
-
 use crate::misc;
 
 //
@@ -28,33 +26,10 @@ fn approximate_pi() -> f32 {
 // PUBLIC FUNCTIONS
 //
 
-pub fn sqrt(n: f32) -> f32 {
-    //! replaced by sqrt_pow()
-    // probably high amounts of unaccuracy
-    if n <= 1.0 {
-        return n;
-    }
-    let mut low = 0.0;
-    let mut high = n;
-    let mut result = 0.0;
-
-    while low <= high {
-        let mid = low + (high - low) / 2.0;
-        let square = mid * mid;
-        if square == n {
-            return mid;
-        } else if square < n {
-            result = mid;
-            low = mid + 1.0;
-        } else {
-            high = mid - 1.0;
-        }
-    }
-    result
-}
-
 pub fn sqrt_pow(num: f32) -> f32 {
     // better representation of the square root
+    // but why not the function from std?
+    // 08/06/25: Now the only method for square roots
     let mut iter = 0;
     let mut root: f32 = num / 3.0;
     if num <= 0.0 {
@@ -85,13 +60,11 @@ pub fn sin(x: f32) -> f32 {
 
 pub fn power(input: f32, power_n: u32) -> f32 {
     // let mut input = input;
-    if power_n < 0 {
+    if power_n == 0 {
         println!("floats don't support values less than zero.");
         return 1.0;
-    } else if power_n == 0 {
-        return 1.0;
     } else if power_n == 1 {
-        return input;
+        return 1.0;
     } else {
         return input * power(input, power_n - 1);
     }
@@ -112,7 +85,7 @@ pub fn mathematical_operation(num1: f32, num2: f32, operation_type: String) -> f
             let result: f32 = num1 - num2;
             return result;
         }
-        multiple if multiple == "multiple".to_string() => {
+        multiple if multiple == "multiply".to_string() => {
             let result: f32 = num1 * num2;
             return result;
         }
@@ -121,7 +94,7 @@ pub fn mathematical_operation(num1: f32, num2: f32, operation_type: String) -> f
             return result;
         }
         _ => {
-            println!("mathematical_operation() ERROR: Operator not found");
+            println!("mathematical_operation() ERROR: Operator '{operation_type}' not found");
             return 1.0;
         }
     }
@@ -130,6 +103,18 @@ pub fn mathematical_operation(num1: f32, num2: f32, operation_type: String) -> f
 pub enum CircleCalcType {
     AreaToRadius,
     RadiusToArea
+}
+
+impl CircleCalcType {
+    pub fn area_to_radius() -> Self {
+        let result = CircleCalcType::AreaToRadius;
+        return result;
+    }
+
+    pub fn radius_to_area() -> Self {
+        let result = CircleCalcType::RadiusToArea;
+        return result;
+    }
 }
 
 pub fn circle_calculation(input: f32, operation_type: CircleCalcType) -> f32 {
@@ -167,63 +152,81 @@ pub fn number_square(number: i32) -> i32 {
     }
 }
 
-pub fn render_function(operationtype: RenderType) -> Vec<char> {
+pub fn full_render() -> Vec<char> {
     let con_height = 30;
     let con_width = 120;
     let mut con_vec: Vec<char> = Vec::new();
     let con_sign: char = '#';
 
-    match operationtype {
-        RenderType::FULL => { // covers entire screen
-            for sign in 0..con_width {
-                con_vec.push(con_sign);
-                for sign in 0..con_height {
-                    con_vec.push(con_sign);
-                }
-            }
-            return con_vec;
-        }
-        RenderType::CUBE => { // cube rendering using matrics
-            // todo
-            println!("ERROR: Hasn't been implemented yet.");
-            return vec!['E', 'r', 'r'];
-        }
-        RenderType::TRIANGLE => { // simple triangle rendering
-            println!("ERROR: Use render_triangle() instead");
-            return vec!['E', 'r', 'r'];
+    for _sign in 0..con_width {
+        con_vec.push(con_sign);
+        for _sign in 0..con_height {
+            con_vec.push(con_sign);
         }
     }
+    return con_vec;
 }
 
-pub fn render_triangle() -> Vec<String> {
+pub fn triangle_render() -> Vec<char> {
     let con_sign: char = '#';
-    let mut con_vec: Vec<String> = Vec::new();
+    let mut con_vec: Vec<char> = Vec::new();
     let num = 29; // n; length of the triangle, should be equal to the terminal's one - 1
     let mut iter = 1; // i
 
     while iter <= num {
         let mut iter2 = 1; // j
         while iter2 <= iter {
-            con_vec.push(con_sign.to_string());
+            con_vec.push(con_sign);
             iter2 += 1;
         }
-        con_vec.push("\n".to_string());
+        con_vec.push('\n');
         iter += 1;
     }
     return con_vec;
 }
 
-pub fn random_number() -> u32 {
-    // totally cryptosafe numbers
-    let rand = SystemTime::now()
-        .duration_since(UNIX_EPOCH)
-        .unwrap()
-        .subsec_nanos();
-    return rand as u32;
+pub fn sine_wave_render() -> Vec<char> {
+    // some copypasta from some program in C
+
+    let mut con_vec: Vec<char> = Vec::new();
+
+    let screen_width = 80;
+    let amplitude = 15.0;
+    let frequency = 1.0;
+
+    for x in 0..screen_width {
+        let angle = x as f32 / screen_width as f32 * 2.0 * approximate_pi() * frequency;
+        let sine_value = (amplitude * sin(angle)) as i32;
+
+        let character_index = sine_value + amplitude as i32;
+
+        let character = if character_index <= 0 {
+            ' ' // low value
+        } else if character_index >= amplitude as i32 {
+            '+' // high value
+        } else {
+            '.'
+        };
+
+        con_vec.push(character);
+    }
+    con_vec.push('\n');
+
+    return con_vec;
 }
 
-pub enum RenderType {
-    FULL,
-    CUBE,
-    TRIANGLE
+pub fn celsius_to_fahrenreit(num: f32) -> f32 {
+    let result: f32 = num * 1.8 + 32.0;
+    return result;
+}
+
+pub fn random_number(seed: Option<Vec<i32>>) -> i32 {
+    // totally cryptosafe numbers
+
+    // 08/06/25: total rewrite from poor-mans-random-generator
+    // to pointers generator
+
+    // 09/06/25: in the process of rewriting again
+
+    return 0;
 }

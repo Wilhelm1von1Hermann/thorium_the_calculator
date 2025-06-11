@@ -1,9 +1,37 @@
-use std::io::stdin;
-use std::io::Write;
+use std::io::{stdin, stdout, Write};
 
-pub enum ExitType {
+enum ExitTypeEnum {
     Error,
     Normal
+}
+
+pub struct ExitType {
+    r#type: ExitTypeEnum,
+    exit_code: u32
+}
+
+impl ExitType {
+    pub fn error(exit_code: u32) -> Self {
+        let result = ExitType {
+            r#type: ExitTypeEnum::Error,
+            exit_code
+        };
+        return result;
+    }
+
+    pub fn normal() -> Self {
+        let result = ExitType {
+            r#type: ExitTypeEnum::Normal,
+            exit_code: 0
+        };
+        return result;
+    }
+}
+
+pub fn printf(string: &str) {
+    let mut lock = stdout().lock();
+    lock.write_all(string.as_bytes()).unwrap();
+    lock.write(b"\n").unwrap();
 }
 
 pub fn screenhold() {
@@ -28,22 +56,28 @@ pub fn screenclear() {
 
 pub fn thorium_panic(message: String) {
     print!("\n:(\nERROR: {message}");
-    std::io::stdout().flush().expect("error error, you're cooked");
+    match std::io::stdout().flush() {
+        Ok(()) => (),
+        Err(_) => {
+            println!("ERROR: Failed to flush");
+            ()
+        }
+    }
     silenthold();
-    exit(ExitType::Error);
+    exit(ExitType::error(1));
 }
 
 pub fn exit(exittype: ExitType) {
-    match exittype {
-        ExitType::Error => {
-            std::process::exit(1);
+    match exittype.r#type { // r#type means 'type' as identifier, not keyword
+        ExitTypeEnum::Error => {
+            std::process::exit(exittype.exit_code as i32);
         }
-        ExitType::Normal => {
+        ExitTypeEnum::Normal => {
             std::process::exit(0);
         }
     }
 }
 
 // constants for text formatting
-pub const style_bold: &str = "\x1B[1m";
-pub const style_reset: &str = "\x1B[0m";
+pub const STYLE_BOLD: &str = "\x1B[1m";
+pub const STYLE_RESET: &str = "\x1B[0m";
