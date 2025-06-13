@@ -220,13 +220,17 @@ pub fn celsius_to_fahrenreit(num: f32) -> f32 {
     return result;
 }
 
-pub fn random_number(seed: Option<Vec<i32>>) -> i32 {
+pub fn random_number() -> usize {
+    use std::time::{SystemTime, UNIX_EPOCH};
     // totally cryptosafe numbers
 
-    // 08/06/25: total rewrite from poor-mans-random-generator
-    // to pointers generator
+    // 13/06/25: rewrited to utilize both poor man's rgen and pointers
 
-    // 09/06/25: in the process of rewriting again
+    let seed = SystemTime::now().duration_since(UNIX_EPOCH).unwrap().subsec_nanos();
 
-    return 0;
+    let pointer = seed as *const u32;
+    let result = pointer as usize;
+
+    // usually returns numbers like 820 or 487
+    return result % 4096;
 }

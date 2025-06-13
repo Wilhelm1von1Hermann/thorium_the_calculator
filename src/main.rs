@@ -5,7 +5,7 @@ mod interface;
 fn main() {
     misc::screenclear();
 
-    let mut debug_value: misc::DebugValue = misc::DebugValue::new(None);
+    let debug_value = misc::DebugValue::new(None);
 
     debug_value.print_debug();
 

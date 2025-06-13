@@ -20,8 +20,8 @@ pub fn calculator() {
     const HELP_STRING: &str = "Current list: + for plus, - for minus, * for multiple, / for divide, more for more options, exit to EXIT";
     const MORE_OPTIONS_STRING: &str = "More options: \
         sq for squaring, cop for custom operation, c2f for celsius to fahrenreit \
-        \nvec for vectors, sqrt for square root, t0-t9 for rust by practice things \
-        \ncirc for circle operations, exp for exponent, sin for sine calculation \
+        \nvec for vectors, sqrt for square root, r2a for radius to area \
+        \na2r for area to radius, exp for exponent, sin for sine calculation \
         \nrend for rendering mode, rand for random number, time for timer
     ";
 
