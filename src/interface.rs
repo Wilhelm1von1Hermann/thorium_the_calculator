@@ -7,7 +7,7 @@ use crate::math::*;
 use std::io::{stdout, stdin, Write};
 
 // builds count
-include!(concat!(env!("OUT_DIR"), "/build_num.rs"));
+const BUILD_NUMBER: &str = env!("BUILD_NUMBER");
 
 pub fn calculator() {
     // does not include the screenclear(), you have to do it yourself
@@ -25,6 +25,9 @@ pub fn calculator() {
         \nrend for rendering mode, rand for random number, time for timer
     ";
 
+    print!("Welcome to the Thorium build {BUILD_NUMBER}!\n");
+    std::io::stdout().flush().unwrap();
+
     loop {
 
         print!("$ > ");
@@ -38,7 +41,7 @@ pub fn calculator() {
             }
         }
 
-        // example: ["math", "add", "5", "12"]
+        // example: ["+", "50", "18"]
         let args: Vec<&str> = input.trim().split_whitespace().collect();
 
         if args.is_empty() {
@@ -300,6 +303,60 @@ pub fn calculator() {
                 println!("Result: {STYLE_BOLD}{result}{STYLE_RESET}");
                 continue;
             }
+            "sin" => {
+                if args.len() != 2 {
+                    println!("Usage: sin *number*");
+                    continue;
+                };
+
+                let num: f32 = match args[1].trim().parse() {
+                    Ok(num) => num,
+                    Err(err) => {
+                        println!("Error parsing number: {err}");
+                        continue;
+                    }
+                };
+
+                let result: f32 = sin(num);
+
+                println!("Result: {STYLE_BOLD}{result}{STYLE_RESET}");
+                continue;
+            }
+            "time" => {
+                let fps = 24.;
+                let delta_time = 1000. / fps;
+
+                let mut millisecs_count = 0.;
+
+                if args.len() != 2 {
+                    println!("Usage: time *time in seconds*");
+                    continue;
+                }
+
+                let num: f32 = match args[1].trim().parse() {
+                    Ok(num) => num,
+                    Err(err) => {
+                        println!("Error parsing number: {err}");
+                        continue;
+                    }
+                };
+                let num = num * 1000.;
+
+                while millisecs_count <= num {
+                    screenclear();
+                    let intermediate_count = num - millisecs_count;
+
+                    println!("Timer: {intermediate_count} ms");
+                    std::thread::sleep(std::time::Duration::from_millis(delta_time as u64));
+                    millisecs_count += delta_time;
+                }
+                screenclear();
+                continue;
+            }
+            "rend" => {
+                println!("Work in progress.");
+                continue;
+            }
 
             // misc commands
 
@@ -336,6 +393,10 @@ pub fn calculator() {
             }
             "pow" => {
                 println!("Obsolete. Use 'exp' for the same results.");
+                continue;
+            }
+            "sind" => {
+                println!("Obsolete. Use 'rend' for rendering mode.");
                 continue;
             }
 

@@ -1,11 +1,11 @@
 // for storing all of the obsolete, discountinued and unnecessary functions
-// it does not compile
 
 #![cfg(target_os = "windows")]
+// it does not compile ^
 
-
-// original function from the main.rs
-fn calculator() {
+// original calculator() from the main.rs
+// to be used in the legacy mode
+fn calculator_legacy() {
     misc::screenclear();
 
     print!(

@@ -1,43 +1,28 @@
-// this will automatically count compiling attempts
+// build control system❤️
 
-use std::fs;
-use std::path::Path;
+use std::{
+    env,
+    fs,
+    io::Write,
+};
+use toml_edit::*;
 
-fn main () {
+fn main() {
+    println!("cargo:rerun-if-changed=Cargo.toml");
 
-    let build_file = Path::new("build_num.txt");
+    let mut toml_str = fs::read_to_string("Cargo.toml")
+        .expect("Cannot read Cargo.toml");
+    let mut doc = toml_str.parse::<Document>()
+        .expect("Invalid TOML");
 
-    let mut build_number: u32 = match fs::read_to_string(build_file)
-        .unwrap_or("0".to_string())
-        .trim()
-        .parse() {
-            Ok(num) => num,
-            Err(err) => {
-                println!("Couldn't find the build_num.txt: {err}");
-                0
-            }
-    };
+    let mut num = doc["package"]["metadata"]["build"]["number"]
+        .as_integer()
+        .expect("build.number missing");
+    num += 1;
+    doc["package"]["metadata"]["build"]["number"] = value(num);
 
-    build_number += 1;
+    fs::write("Cargo.toml", doc.to_string())
+        .expect("cargo.toml update fail");
 
-    match fs::write(build_file, build_number.to_string()) {
-        Ok(_) => (),
-        Err(err) => {
-            println!("Couldn't write to the build_num.txt: {err}");
-        }
-    }
-
-    // no idea what is going on
-    let out_dir = std::env::var("OUT_DIR").unwrap();
-    let dest_path = Path::new(&out_dir).join("build_num.rs");
-
-    match fs::write(
-        &dest_path,
-        format!("pub const BUILD_NUMBER: u32 = {};", build_number)
-    ) {
-        Ok(_) => (),
-        Err(err) => {
-            println!("Couldn't write to the output file build_num.rs: {err}");
-        }
-    }
+    println!("cargo:rustc-env=BUILD_NUMBER={}", num);
 }

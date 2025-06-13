@@ -1,5 +1,11 @@
 [package]
 name = "thorium"
-version = "2.0.5"
+version = "2.0.6"
 edition = "2024"
 build = "build.rs"
+
+[package.metadata.build]
+number = 96
+
+[build-dependencies]
+toml_edit = "0.19"

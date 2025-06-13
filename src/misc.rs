@@ -1,5 +1,9 @@
 use std::io::{stdin, stdout, Write};
 
+// constants for text formatting
+pub const STYLE_BOLD: &str = "\x1B[1m";
+pub const STYLE_RESET: &str = "\x1B[0m";
+
 enum ExitTypeEnum {
     Error,
     Normal
@@ -28,6 +32,33 @@ impl ExitType {
     }
 }
 
+pub enum DebugValue {
+    Yes(i32),
+    No
+}
+
+impl DebugValue {
+    pub fn new(num: Option<i32>) -> Self {
+        if num != None {
+            let enumeration = DebugValue::Yes(num.unwrap());
+            return enumeration;
+        } else {
+            return DebugValue::No;
+        }
+    }
+
+    pub fn print_debug(&self) {
+        match self {
+            DebugValue::Yes(num) => {
+                println!("Today's debug value: {num}");
+                silenthold();
+            }
+            DebugValue::No => ()
+        }
+    }
+}
+
+// example usage: printf("Hello, " + "World!");
 pub fn printf(string: &str) {
     let mut lock = stdout().lock();
     lock.write_all(string.as_bytes()).unwrap();
@@ -78,6 +109,6 @@ pub fn exit(exittype: ExitType) {
     }
 }
 
-// constants for text formatting
-pub const STYLE_BOLD: &str = "\x1B[1m";
-pub const STYLE_RESET: &str = "\x1B[0m";
+pub fn print_result(result: &str) {
+    println!("Result: {STYLE_BOLD}{result}{STYLE_RESET}");
+}
