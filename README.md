@@ -9,13 +9,11 @@ A not very simple calculator, written in Rust. Currently being reworked, so that
 - Sine calculation
 - Arctan calculation
 - Exponent calculation
-- "-legacy" flag for the old interface (added in build 114)
-- Rendering mode (WIP)
+- "-legacy" flag for the old interface (added in **build 114**)
 
 ## Wiki
 Go check out [Wiki](https://github.com/Wilhelm1von1Hermann/thorium_the_calculator/wiki) for various commands
 
 ## TODO
-- Make rendering mode useful
-- Modular instructions, defined in simple .cfg file
-- Full porting to the new interface and instructions system
+- Rendering mode
+- Modular instructions
