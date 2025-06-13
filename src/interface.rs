@@ -20,9 +20,9 @@ pub fn calculator() {
     const HELP_STRING: &str = "Current list: + for plus, - for minus, * for multiple, / for divide, more for more options, exit to EXIT";
     const MORE_OPTIONS_STRING: &str = "More options: \
         sq for squaring, cop for custom operation, c2f for celsius to fahrenreit \
-        \nvec for vectors, sqrt for square root, r2a for radius to area \
-        \na2r for area to radius, exp for exponent, sin for sine calculation \
-        \nrend for rendering mode, rand for random number, time for timer
+        \nsqrt for square root, r2a for radius to area, a2r for area to radius \
+        \nexp for exponent, sin for sine calculation, rend for rendering mode \
+        \nrand for random number, time for timer
     ";
 
     print!("Welcome to the Thorium build {BUILD_NUMBER}!\n");
@@ -35,7 +35,7 @@ pub fn calculator() {
 
         let mut input = String::new();
         match stdin().read_line(&mut input) {
-            Ok(input) => (),
+            Ok(_) => (),
             Err(err) => {
                 println!("Couldn't read input: {err}");
             }
@@ -346,7 +346,8 @@ pub fn calculator() {
                     screenclear();
                     let intermediate_count = num - millisecs_count;
 
-                    println!("Timer: {intermediate_count} ms");
+                    print!("Timer: {intermediate_count} ms");
+                    stdout().flush().unwrap();
                     std::thread::sleep(std::time::Duration::from_millis(delta_time as u64));
                     millisecs_count += delta_time;
                 }
@@ -373,13 +374,12 @@ pub fn calculator() {
                 println!("Thorium's build is build {BUILD_NUMBER}");
                 continue;
             }
-            // 1 and 0 are remains of the past
-            "1" | "more" => {
+            "more" => {
                 println!("{MORE_OPTIONS_STRING}");
                 stdout().flush().unwrap();
                 continue;
             }
-            "0" | "exit" => {
+            "exit" => {
 
                 screenclear();
                 exit(ExitType::normal());
@@ -399,11 +399,20 @@ pub fn calculator() {
                 println!("Obsolete. Use 'rend' for rendering mode.");
                 continue;
             }
+            // 1 and 0 are remains of the past, before build 82 or modern interface
+            "1" => {
+                println!("Obsolete. Use 'more' for more options.");
+                continue;
+            }
+            "0" => {
+                println!("Obsolete. Use 'exit' to exit.");
+                continue;
+            }
 
             // wildcard
             _ => {
                 failed_count += 1;
-                if failed_count == 5 {
+                if failed_count % 5 == 0 || failed_count % 6 == 0 {
                     println!("Can you stop?");
                     continue;
                 }

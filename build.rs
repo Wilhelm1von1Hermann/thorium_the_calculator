@@ -1,16 +1,12 @@
 // build control system❤️
 
-use std::{
-    env,
-    fs,
-    io::Write,
-};
+use std::fs;
 use toml_edit::*;
 
 fn main() {
     println!("cargo:rerun-if-changed=Cargo.toml");
 
-    let mut toml_str = fs::read_to_string("Cargo.toml")
+    let toml_str = fs::read_to_string("Cargo.toml")
         .expect("Cannot read Cargo.toml");
     let mut doc = toml_str.parse::<Document>()
         .expect("Invalid TOML");
