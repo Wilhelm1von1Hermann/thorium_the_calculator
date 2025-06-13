@@ -5,7 +5,10 @@ edition = "2024"
 build = "build.rs"
 
 [package.metadata.build]
-number = 107
+number = 114
+
+[profile.release]
+lto = true
 
 [build-dependencies]
 toml_edit = "0.19"

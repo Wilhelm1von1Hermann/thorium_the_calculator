@@ -1,11 +1,15 @@
 // for storing all of the obsolete, discountinued and unnecessary functions
 
-#![cfg(target_os = "windows")]
-// it does not compile ^
-
-// original calculator() from the main.rs
+// original calculator_legacy() from the main.rs
 // to be used in the legacy mode
-fn calculator_legacy() {
+
+use std::io::{Write, stdin};
+use std::time::Instant;
+use crate::misc;
+use crate::misc::*;
+use crate::math;
+
+pub fn calculator_legacy() {
     misc::screenclear();
 
     print!(
@@ -31,10 +35,10 @@ fn calculator_legacy() {
             let num2 = num2.trim().parse().expect("Invalid input");
 
             let result = math::mathematical_operation(num1, num2, "plus".to_string());
-            println!("\n{style_bold}{num1} + {num2} = {result}{style_reset}\n");
+            println!("\n{STYLE_BOLD}{num1} + {num2} = {result}{STYLE_RESET}\n");
 
             misc::screenhold();
-            calculator();
+            calculator_legacy();
         }
         "-" => {
             println!("Minus selected. Enter first number:");
@@ -45,10 +49,10 @@ fn calculator_legacy() {
             let num2 = num2.trim().parse::<f32>().expect("Invalid input");
 
             let result: f32 = math::mathematical_operation(num1, num2, "minus".to_string());
-            println!("\n {style_bold} {num1} - {num2} = {result} {style_reset} \n");
+            println!("\n {STYLE_BOLD} {num1} - {num2} = {result} {STYLE_RESET} \n");
 
             misc::screenhold();
-            calculator();
+            calculator_legacy();
         }
         "*" => {
             println!("Multiplication selected. Enter first number:");
@@ -59,10 +63,10 @@ fn calculator_legacy() {
             let num2 = num2.trim().parse::<f32>().expect("Invalid input");
 
             let result: f32 = math::mathematical_operation(num1, num2, "multiple".to_string());
-            println!("\n {style_bold} {num1} * {num2} = {result} {style_reset} \n");
+            println!("\n {STYLE_BOLD} {num1} * {num2} = {result} {STYLE_RESET} \n");
 
             misc::screenhold();
-            calculator();
+            calculator_legacy();
         }
         "/" => {
             println!("Division selected. Enter first number:");
@@ -73,10 +77,10 @@ fn calculator_legacy() {
             let num2 = num2.trim().parse::<f32>().expect("Invalid input");
 
             let result: f32 = math::mathematical_operation(num1, num2, "divide".to_string());
-            println!("\n {style_bold} {num1} / {num2} = {result} {style_reset} \n");
+            println!("\n {STYLE_BOLD} {num1} / {num2} = {result} {STYLE_RESET} \n");
 
             misc::screenhold();
-            calculator();
+            calculator_legacy();
         }
         "sq" | "SQ" => {
             println!("Number squaring selected. Enter your number:");
@@ -87,11 +91,11 @@ fn calculator_legacy() {
             let result = math::number_square(num1);
             let perf_elapsed = perf_now.elapsed();
 
-            println!("\n {style_bold} {num1} squared is {result} {style_reset} \n");
+            println!("\n {STYLE_BOLD} {num1} squared is {result} {STYLE_RESET} \n");
             println!("Calculation time: {perf_elapsed:.2?}");
 
             misc::screenhold();
-            calculator();
+            calculator_legacy();
         }
         "sqrt" | "SQRT" => {
             println!("Square root selected. This operator only supports integers as an input.");
@@ -103,11 +107,11 @@ fn calculator_legacy() {
             let result = math::sqrt_pow(num1 as f32);
             let perf_elapsed = perf_now.elapsed();
 
-            println!("\n {style_bold} Square root of {num1} is {result} {style_reset}");
-            println!("Calculation time: {style_bold}{perf_elapsed:.2?}{style_reset}");
+            println!("\n {STYLE_BOLD} Square root of {num1} is {result} {STYLE_RESET}");
+            println!("Calculation time: {STYLE_BOLD}{perf_elapsed:.2?}{STYLE_RESET}");
 
             misc::screenhold();
-            calculator();
+            calculator_legacy();
         }
         "c" | "C" => {
             println!("Custom operation selected. ");
@@ -146,10 +150,10 @@ fn calculator_legacy() {
 
             let result: f32 = { input * 1.8 + 32.0 };
 
-            println!("{style_bold} {input}°C is {result}°F {style_reset}");
+            println!("{STYLE_BOLD} {input}°C is {result}°F {STYLE_RESET}");
 
             misc::screenhold();
-            calculator();
+            calculator_legacy();
         }
         "cr" | "CR" => {
             // circle operations
@@ -173,7 +177,7 @@ fn calculator_legacy() {
 
                     misc::screenhold();
                     misc::screenclear();
-                    calculator();
+                    calculator_legacy();
                 }
                 "2" => {
                     // Area to radius
@@ -188,13 +192,13 @@ fn calculator_legacy() {
 
                     misc::screenhold();
                     misc::screenclear();
-                    calculator();
+                    calculator_legacy();
                 }
                 _ => {
                     println!("Couldn't find that operation.");
                     misc::silenthold();
                     misc::screenclear();
-                    calculator();
+                    calculator_legacy();
                 }
             }
         }
@@ -207,10 +211,10 @@ fn calculator_legacy() {
             stdin().read_line(&mut num2).expect("Invalid input");
             let num2: u32 = num2.trim().parse().expect("error parsing"); // power
             let result = math::power(num1, num2);
-            println!("{style_bold}{num1} to the power of {num2} is {result} {style_reset}");
+            println!("{STYLE_BOLD}{num1} to the power of {num2} is {result} {STYLE_RESET}");
 
             misc::screenhold();
-            calculator();
+            calculator_legacy();
         }
         "sin" | "SIN" => {
             misc::screenclear();
@@ -220,10 +224,10 @@ fn calculator_legacy() {
             let num1: f32 = num1.trim().parse().expect("error parsing");
             let result = math::sin(num1);
 
-            println!("{style_bold}Sin of {num1} is {result} {style_reset}");
+            println!("{STYLE_BOLD}Sin of {num1} is {result} {STYLE_RESET}");
 
             misc::screenhold();
-            calculator();
+            calculator_legacy();
         }
         "sind" | "SIND" => {
             misc::screenclear();
@@ -238,7 +242,7 @@ fn calculator_legacy() {
             }
 
             misc::silenthold();
-            calculator();
+            calculator_legacy();
         }
         "rend" | "REND" => {
             // used for rendering different stuff
@@ -256,7 +260,7 @@ fn calculator_legacy() {
                 Err(_) => {
                     println!("Error parsing that input.");
                     misc::screenhold();
-                    calculator();
+                    calculator_legacy();
                     1
                 }
             };
@@ -283,12 +287,12 @@ fn calculator_legacy() {
                     misc::screenhold();
                     misc::screenclear();
 
-                    calculator();
+                    calculator_legacy();
                 }
                 2 => {
                     println!("Hasn't been implemented yet.");
                     misc::screenhold();
-                    calculator();
+                    calculator_legacy();
                 }
                 3 => {
                     // render simple triangle
@@ -302,19 +306,19 @@ fn calculator_legacy() {
                     }
 
                     misc::silenthold();
-                    calculator();
+                    calculator_legacy();
                 }
                 _ => {
                     println!("Option not found.");
                     misc::screenhold();
-                    calculator();
+                    calculator_legacy();
                 }
             }
         }
         "rand" | "RAND" => {
             println!("Sorry! Currently under maintenance!");
             misc::screenhold();
-            calculator();
+            calculator_legacy();
         }
         "time" | "TIME" => {
             misc::screenclear();
@@ -344,11 +348,11 @@ rand for a random number, time for timer \n"
             );
             std::io::stdout().flush().expect("flush fail");
             misc::screenhold();
-            calculator();
+            calculator_legacy();
         }
         "clear" => {
             misc::screenclear();
-            calculator();
+            calculator_legacy();
         }
         "0" | "stop" | "exit" => {
             misc::silenthold();
@@ -357,7 +361,7 @@ rand for a random number, time for timer \n"
         _ => {
             println!("Unknown operation");
             misc::screenhold();
-            calculator();
+            calculator_legacy();
         }
     }
 }

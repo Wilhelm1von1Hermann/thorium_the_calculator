@@ -47,7 +47,7 @@ impl DebugValue {
         }
     }
 
-    pub fn print_debug(&self) {
+    pub fn print_debugval(&self) {
         match self {
             DebugValue::Yes(num) => {
                 println!("Today's debug value: {num}");

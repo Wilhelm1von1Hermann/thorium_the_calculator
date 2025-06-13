@@ -25,7 +25,7 @@ pub fn calculator() {
         \nrand for random number, time for timer
     ";
 
-    print!("Welcome to the Thorium build {BUILD_NUMBER}!\n");
+    print!("Welcome to the Thorium The Calculator!\n");
     std::io::stdout().flush().unwrap();
 
     loop {
