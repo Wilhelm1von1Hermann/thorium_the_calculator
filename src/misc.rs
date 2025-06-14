@@ -87,13 +87,7 @@ pub fn screenclear() {
 
 pub fn thorium_panic(message: String) {
     print!("\n:(\nERROR: {message}");
-    match std::io::stdout().flush() {
-        Ok(()) => (),
-        Err(_) => {
-            println!("ERROR: Failed to flush");
-            ()
-        }
-    }
+    std::io::stdout().flush().unwrap();
     silenthold();
     exit(ExitType::error(1));
 }

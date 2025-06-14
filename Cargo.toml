@@ -5,7 +5,8 @@ edition = "2024"
 build = "build.rs"
 
 [package.metadata.build]
-number = 114
+number = 121
+switch = 1
 
 [profile.release]
 lto = true

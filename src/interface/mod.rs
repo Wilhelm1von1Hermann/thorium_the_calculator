@@ -9,6 +9,11 @@ use std::io::{stdout, stdin, Write};
 // builds count
 const BUILD_NUMBER: &str = env!("BUILD_NUMBER");
 
+// whether it uses debug
+const BUILD_PROFILE: &str = env!("BUILD_PROFILE");
+
+const COP_API_VERSION: &str = "0.1.0";
+
 pub fn calculator() {
     // does not include the screenclear(), you have to do it yourself
     // should also include better error handling
@@ -30,8 +35,13 @@ pub fn calculator() {
 
     loop {
 
-        print!("$ > ");
-        stdout().flush().unwrap();
+        if BUILD_PROFILE == "debug" {
+            print!("DBG$ > ");
+            stdout().flush().unwrap();
+        } else {
+            print!("$ > ");
+            stdout().flush().unwrap();
+        }
 
         let mut input = String::new();
         match stdin().read_line(&mut input) {
@@ -354,7 +364,24 @@ pub fn calculator() {
                 screenclear();
                 continue;
             }
+            "rand" => {
+                let number = random_number();
+                println!("Random number: {number}");
+                continue;
+            }
             "rend" => {
+                println!("Work in progress.");
+                continue;
+            }
+
+            // COP API
+
+            "copver" => {
+                println!("COP API Version: v{COP_API_VERSION}");
+                continue;
+            }
+
+            "cop" => {
                 println!("Work in progress.");
                 continue;
             }
